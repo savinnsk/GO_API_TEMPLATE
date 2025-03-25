@@ -13,9 +13,9 @@ func main() {
 	if (err != nil) {panic(err)}
 
 	mux := http.NewServeMux()
-	handler := configs.EnableCORS(mux)
+	server := configs.LoadMiddlewares(mux)
 	configs.RouterMapper(mux)
 
 	log.Printf("Server Started At %s\n", cfg.PortServer)
-	http.ListenAndServe(cfg.PortServer,handler)
+	http.ListenAndServe(cfg.PortServer,server)
 }
