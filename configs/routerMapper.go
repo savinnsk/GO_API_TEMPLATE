@@ -2,9 +2,9 @@ package configs
 
 import (
 	"net/http"
-	userControler "github.com/savinnsk/api-template-go/internal/presentation"
+	"github.com/savinnsk/api-template-go/internal/presentation/users"
 )
 
 func RouterMapper(mux *http.ServeMux) {
-	mux.HandleFunc("GET /users/{id}",userControler.GetUserById)
+	presentation.UserRoutes(mux)
 }
