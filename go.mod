@@ -2,9 +2,13 @@ module github.com/savinnsk/api-template-go
 
 go 1.24.1
 
-require github.com/spf13/viper v1.20.0
+require (
+	github.com/go-sql-driver/mysql v1.9.1
+	github.com/spf13/viper v1.20.0
+)
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect

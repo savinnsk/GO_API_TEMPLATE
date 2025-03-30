@@ -5,6 +5,11 @@ import "github.com/spf13/viper"
 
 type conf struct {
 	PortServer string `mapstructure:"PORT_SERVER"`
+	DBUser string `mapstructure:"DB_USER"`
+	DBDatabase string  `mapstructure:"DB_DATABASE"`
+	DBPassword string  `mapstructure:"DB_PASSWORD"`
+	DBPort string  `mapstructure:"DB_PORT"`
+	DBHost string  `mapstructure:"DB_HOST"`
 }
 
 
