@@ -11,10 +11,10 @@ import (
 
 
 func main() {
-	cfg, err := configs.LoadConfig("../")
+	env, err := configs.LoadEnv("../")
 	if (err != nil) {panic(err)}
 
-	db := configs.InitDb(cfg)
+	db := configs.InitDb(env)
 	defer db.Close()
 	log.Printf("Database initialized with success")
 
@@ -24,7 +24,7 @@ func main() {
 	server := configs.LoadMiddlewares(mux)
 	configs.RouterMapper(mux)
 
-	log.Printf("Server Started At %s\n", cfg.PortServer)
-	http.ListenAndServe(cfg.PortServer,server)
+	log.Printf("Server Started At %s\n", env.PortServer)
+	http.ListenAndServe(env.PortServer,server)
 }
 
