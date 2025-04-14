@@ -7,3 +7,6 @@ sql:
     go:
       package: "sqlc"
       out: "internal/infra/sqlc"
+      overrides:
+      - db_type: "decimal"
+        go_type: "float64"
