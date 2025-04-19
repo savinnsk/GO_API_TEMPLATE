@@ -10,6 +10,8 @@ type conf struct {
 	DBPassword string  `mapstructure:"DB_PASSWORD"`
 	DBPort string  `mapstructure:"DB_PORT"`
 	DBHost string  `mapstructure:"DB_HOST"`
+	JwtSecret string  `mapstructure:"JWT_SECRET"`
+	JwtExpiresIn string  `mapstructure:"JWT_EXPIRES_IN"`
 }
 
 
