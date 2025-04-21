@@ -1,18 +1,22 @@
 package repositories
 
 import (
-	"github.com/savinnsk/api-template-go/configs"
 	"github.com/savinnsk/api-template-go/internal/infra/sqlc"
+	"github.com/savinnsk/api-template-go/configs"
 
 )
-func CreateUser(db configs.DbInstance, userParam sqlc.CreateUserParams) error {
+func CreateUser(userParam sqlc.CreateUserParams) (sqlc.User ,error) {
 	ctx := configs.GetContext();
+	db := configs.GetInstanceDB()
 
+	if err  := db.CreateUser(ctx, userParam); err != nil {
+		return sqlc.User{} , err
+	};
 
-	err := db.CreateUser(ctx, userParam);
-
-	if err != nil {
-		return err
+	user,err := db.GetUser(ctx,userParam.ID)
+	if (err != nil) {
+		return sqlc.User{} , err
 	}
-	return nil
+
+	return user,nil
 }
