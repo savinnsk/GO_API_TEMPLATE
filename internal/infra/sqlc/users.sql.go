@@ -56,12 +56,58 @@ func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
 	return i, err
 }
 
-const listUsers = `-- name: ListUsers :many
+const listUsersAsc = `-- name: ListUsersAsc :many
 SELECT id, name, email, password FROM users
+ORDER BY name ASC
+LIMIT ? OFFSET ?
 `
 
-func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.QueryContext(ctx, listUsers)
+type ListUsersAscParams struct {
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) ListUsersAsc(ctx context.Context, arg ListUsersAscParams) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, listUsersAsc, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Email,
+			&i.Password,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listUsersDesc = `-- name: ListUsersDesc :many
+SELECT id, name, email, password FROM users
+ORDER BY name DESC
+LIMIT ? OFFSET ?
+`
+
+type ListUsersDescParams struct {
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) ListUsersDesc(ctx context.Context, arg ListUsersDescParams) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, listUsersDesc, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

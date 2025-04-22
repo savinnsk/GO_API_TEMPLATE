@@ -1,5 +1,13 @@
--- name: ListUsers :many
-SELECT * FROM users;
+-- name: ListUsersAsc :many
+SELECT * FROM users
+ORDER BY name ASC
+LIMIT ? OFFSET ?;
+
+-- name: ListUsersDesc :many
+SELECT * FROM users
+ORDER BY name DESC
+LIMIT ? OFFSET ?;
+
 
 -- name: GetUser :one
 SELECT * FROM users WHERE id = ?;
