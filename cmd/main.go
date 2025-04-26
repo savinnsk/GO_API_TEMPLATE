@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/savinnsk/api-template-go/configs"
+	controllers "github.com/savinnsk/api-template-go/internal/controllers"
+
 )
 
 func main() {
@@ -21,7 +23,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	server := configs.LoadMiddlewares(mux)
-	configs.RouterMapper(mux)
+	controllers.RouterMapper(mux)
 
 	log.Printf("Server Started At %s\n", env.PortServer)
 	http.ListenAndServe(env.PortServer, server)
