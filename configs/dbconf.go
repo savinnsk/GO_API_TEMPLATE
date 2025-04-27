@@ -5,16 +5,21 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/savinnsk/api-template-go/internal/infra/sqlc"
+
 )
 
 
-var dbConn *sql.DB
+var DbConn *sql.DB
+var dbInstance *DbInstance
 type DbInstance struct { 
 	db *sql.DB
 	*sqlc.Queries
 	} 
+
+
 
 func InitDb(cfg *conf) *sql.DB {
 	dns := fmt.Sprintf("%s:%s@tcp(%s)/%s",cfg.DBUser,cfg.DBPassword,cfg.DBHost,cfg.DBDatabase)
@@ -24,18 +29,20 @@ func InitDb(cfg *conf) *sql.DB {
 	if  err != nil {
 		panic(err)
 	}
+	
+	dbInstance = &DbInstance{
+	db:      dbConn,
+		Queries: sqlc.New(dbConn),
+	}
 
 	return dbConn
 }
 
 func GetInstanceDB() *DbInstance {
-	if dbConn == nil {
-		log.Fatal("Database instance error.")
+	if dbInstance == nil {
+		log.Fatal("Database instance not initialized. Did you call InitDb()?")
 	}
-	return &DbInstance{
-		db : dbConn,
-		Queries: sqlc.New(dbConn),
-	}
+	return dbInstance
 }
 
 func (dbInst *DbInstance) CallTx(ctx context.Context, fn func(*sqlc.Queries) error) error {
