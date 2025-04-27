@@ -20,7 +20,7 @@ func main() {
 	log.Printf("Database initialized with success")
 
 	configs.LoadContext()
-
+	configs.ValidateInstance()
 	mux := http.NewServeMux()
 	server := configs.LoadMiddlewares(mux)
 	controllers.RouterMapper(mux)
