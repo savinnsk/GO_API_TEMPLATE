@@ -13,3 +13,11 @@ func BadRequest(w http.ResponseWriter, message string) {
 		"message": message,	
 	})
 }
+
+func InternalError(w http.ResponseWriter, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": message,	
+	})
+}
