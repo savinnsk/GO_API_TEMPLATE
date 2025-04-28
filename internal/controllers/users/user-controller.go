@@ -37,9 +37,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 	result,err := usecase.CreateUserUseCase(user)
 
 	if err != nil {
+		if err.Error() == "internal error" {shared.InternalError(w,err.Error());return }
 		shared.BadRequest(w,err.Error())
 		return
 	}
+	
 	
 	 shared.Created(w,map[string]interface{}{
 		"message": "User created successfully",
