@@ -10,7 +10,7 @@ type User struct {
 }
 
 type UserDto struct {
-	ID       string `json:"id"`
+	ID       string `json:"id,omitempty"`
 	Name     string `json:"name" validate:"required,min=2,max=100"`
 	Password string `json:"password" validate:"required,min=6"`
 	Email    string `json:"email" validate:"required,email"`
