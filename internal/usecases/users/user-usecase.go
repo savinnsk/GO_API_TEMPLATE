@@ -27,3 +27,21 @@ func CreateUserUseCase(userDto domain.UserDto )(*domain.User, error){
 
 	
 }
+
+func LoginUser(loginDto domain.LoginDto)(*domain.User, error){
+
+	user ,err := repositories.GetByEmail(loginDto.Email)
+	if err != nil {
+		return nil,fmt.Errorf("email or password invalid")
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password),[]byte(loginDto.Password))
+		if err != nil {
+		return nil,fmt.Errorf("email or password invalid")
+	}
+
+	result := domain.ToUserReponse(&user)
+
+	return result,nil
+
+}

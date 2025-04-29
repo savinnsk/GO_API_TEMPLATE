@@ -16,6 +16,12 @@ type UserDto struct {
 	Email    string `json:"email" validate:"required,email"`
 }
 
+
+type LoginDto struct {
+	Password string `json:"password" validate:"required,min=6"`
+	Email    string `json:"email" validate:"required,email"`
+}
+
 func ToUserReponse(userSqlc *sqlc.User) *User{
 	return &User{
 		ID: userSqlc.ID,

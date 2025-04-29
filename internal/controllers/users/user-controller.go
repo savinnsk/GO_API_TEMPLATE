@@ -50,3 +50,27 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 
 
 }
+
+func Login(w http.ResponseWriter, r *http.Request) {
+
+	var user domain.LoginDto
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		shared.BadRequest(w,err.Error())
+		return
+	}
+
+	result,err := usecase.LoginUser(user)
+
+		if err != nil {
+		if err.Error() == "internal error" {shared.InternalError(w,err.Error());return }
+		shared.BadRequest(w,err.Error())
+		return
+	}
+
+	 shared.Created(w,map[string]interface{}{
+		"message": "User created successfully",
+		"user":    result,
+	})
+	
+}
