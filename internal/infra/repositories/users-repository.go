@@ -77,6 +77,17 @@ func GetUsers() ([]sqlc.User, error) {
 
 }
 
+func GetByEmail(email string) (sqlc.User, error) {
+	ctx := configs.GetContext()
+	db := configs.GetInstanceDB()
+	result, err := db.GetUserByEmail(ctx,email)
+	if err != nil {
+		return sqlc.User{}, err
+	}
+	return result, nil
+
+}
+
 func UpdateUser(userDto domain.UserDto) (sqlc.User, error) {
 	ctx := configs.GetContext()
 	db := configs.GetInstanceDB()
