@@ -10,5 +10,5 @@ import (
 func UserRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /users/{id}",controllers.GetUserById)
 	mux.HandleFunc("POST /users",controllers.CreateUser)
-	mux.HandleFunc("POST /Login",controllers.Login)
+	mux.HandleFunc("POST /login",controllers.Login)
 }
