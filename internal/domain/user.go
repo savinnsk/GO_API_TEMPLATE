@@ -30,3 +30,7 @@ func ToUserReponse(userSqlc *sqlc.User) *User{
 		Password: userSqlc.Password,
 	}
 }
+
+type LoginResponse struct {
+    Token string `json:"token"`
+}

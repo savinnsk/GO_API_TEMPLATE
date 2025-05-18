@@ -69,7 +69,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	 shared.Created(w,map[string]interface{}{
-		"message": "User created successfully",
+		"message": "login successfully",
 		"user":    result,
 	})
 	
