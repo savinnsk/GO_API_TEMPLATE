@@ -15,7 +15,7 @@ type conf struct {
 }
 
 
-func LoadEnv(path string) (*conf,error) {
+func LoadEnv() (*conf,error) {
 	var cfg *conf
 	viper.SetConfigName("app_config")
 	viper.SetConfigType("env")

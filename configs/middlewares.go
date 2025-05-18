@@ -26,13 +26,13 @@ func EnableWebSecurityDefault(next http.Handler) http.Handler {
 
 
 func LoadMiddlewares(next http.Handler) http.Handler{
+	middlewareChain := EnableCORS(EnableWebSecurityDefault(next))
+	
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		EnableCORS(next)
-		EnableWebSecurityDefault(next)
-		if r.Method == "OPTIONS" {
+		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
 			return
 		}
-		next.ServeHTTP(w, r)
+		middlewareChain.ServeHTTP(w, r)
 	})
 }

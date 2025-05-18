@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	env, err := configs.LoadEnv("../")
+	env, err := configs.LoadEnv()
 	if err != nil {
 		panic(err)
 	}
