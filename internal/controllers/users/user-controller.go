@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/savinnsk/api-template-go/configs"
+	"github.com/savinnsk/api-template-go/internal/controllers/middlewares"
 	"github.com/savinnsk/api-template-go/internal/domain"
 	"github.com/savinnsk/api-template-go/internal/shared"
 	"github.com/savinnsk/api-template-go/internal/usecases/users"
@@ -15,9 +17,10 @@ import (
 
 
 func GetUserById(w http.ResponseWriter, r *http.Request) {
-	id:= r.PathValue(("id"))
 
-	fmt.Fprintf(w,"hello id:%s", id)
+	claims, _ := r.Context().Value(middlewares.ClaimsKey).(jwt.MapClaims)
+
+	fmt.Fprintf(w,"hello id:%s", claims["sub"].(string))
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request){

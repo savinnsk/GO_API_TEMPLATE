@@ -18,8 +18,9 @@ func JwtAuth(next http.Handler) http.Handler{
 	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
 		tokenString := r.Header.Get("Authorization")
 
-		if len(tokenString) > 7 && tokenString[:7] == "Bearer" {
-			tokenString = tokenString[7:]
+		
+		if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
+		tokenString = tokenString[7:]
 		}
 
 		token, err := jwt.Parse(tokenString ,func(token *jwt.Token)(interface{},error){
@@ -29,11 +30,13 @@ func JwtAuth(next http.Handler) http.Handler{
 
 			env , _ := configs.LoadEnv()
 
-			return env.JwtSecret, nil
+			return []byte(env.JwtSecret), nil
 		})
 
-		if err != nil || !token.Valid {
+	
+		if err != nil || !token.Valid || token == nil {
 			http.Error(w,"Invalid token",http.StatusUnauthorized)
+			return
 		}
 
 		if claims , ok := token.Claims.(jwt.MapClaims) ; ok {
