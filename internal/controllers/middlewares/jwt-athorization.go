@@ -3,6 +3,7 @@ package middlewares
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -16,6 +17,8 @@ const ClaimsKey ctxKey = "jwtClaims"
 
 func JwtAuth(next http.Handler) http.Handler{
 	return http.HandlerFunc(func (w http.ResponseWriter, r *http.Request){
+		env , _ := configs.LoadEnv()
+
 		tokenString := r.Header.Get("Authorization")
 
 		
@@ -25,17 +28,16 @@ func JwtAuth(next http.Handler) http.Handler{
 
 		token, err := jwt.Parse(tokenString ,func(token *jwt.Token)(interface{},error){
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil,fmt.Errorf("unexpected signing method")		
+				return nil,fmt.Errorf("athorization error")		
 			}
-
-			env , _ := configs.LoadEnv()
 
 			return []byte(env.JwtSecret), nil
 		})
 
 	
 		if err != nil || !token.Valid || token == nil {
-			http.Error(w,"Invalid token",http.StatusUnauthorized)
+			log.Printf("JwtAuth token invalid: %v", err)
+			http.Error(w,"athorization error",http.StatusUnauthorized)
 			return
 		}
 
@@ -45,7 +47,7 @@ func JwtAuth(next http.Handler) http.Handler{
 			return
 		} 
 
-		http.Error(w, "Invalid claims", http.StatusUnauthorized)
+		http.Error(w, "athorization error", http.StatusUnauthorized)
 
 	})
 }

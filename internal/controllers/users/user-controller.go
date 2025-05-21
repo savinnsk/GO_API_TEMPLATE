@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -14,13 +13,73 @@ import (
 
 )
 
-
-
+//protected
 func GetUserById(w http.ResponseWriter, r *http.Request) {
+	
+	id := r.PathValue("id")
+
+	result,err := usecase.FindUserByIdUseCase(id)
+
+	if err != nil {
+		shared.BadRequest(w,err.Error())
+	}
+
+	 shared.Ok(w,map[string]interface{}{
+		"message": "User Found",
+		"user":    result,
+	})
+}
+
+//protected 
+func GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	
+
+	result,err := usecase.GetAllUsersUseCase()
+
+	if err != nil {
+		shared.BadRequest(w,err.Error())
+	}
+
+	 shared.Ok(w,map[string]interface{}{
+		"message": "Users Found",
+		"user":    result,
+	})
+}
+
+//protected 
+func UpdateUserUser(w http.ResponseWriter, r *http.Request){
 
 	claims, _ := r.Context().Value(middlewares.ClaimsKey).(jwt.MapClaims)
+	
+	subEmail := claims["sub"].(string)
 
-	fmt.Fprintf(w,"hello id:%s", claims["sub"].(string))
+	var user domain.UserDto
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		shared.BadRequest(w,err.Error())
+		return
+	}
+
+	if err := configs.Validate.Struct(user); err != nil {
+		shared.BadRequest(w, "Validation error: "+err.Error())
+		return
+	}
+
+	result,err := usecase.UpdateUserUseCase(subEmail,user)
+
+	if err != nil {
+		if err.Error() == "internal error" {shared.InternalError(w,err.Error());return }
+		shared.BadRequest(w,err.Error())
+		return
+	}
+	
+	
+	 shared.Ok(w,map[string]interface{}{
+		"message": "User updated",
+		"user":    result,
+	})
+
+
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request){
@@ -46,7 +105,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request){
 	}
 	
 	
-	 shared.Created(w,map[string]interface{}{
+	 shared.Ok(w,map[string]interface{}{
 		"message": "User created successfully",
 		"user":    result,
 	})
@@ -63,7 +122,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result,err := usecase.LoginUser(user)
+	result,err := usecase.LoginUserUseCase(user)
 
 		if err != nil {
 		if err.Error() == "internal error" {shared.InternalError(w,err.Error());return }
@@ -71,7 +130,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	 shared.Created(w,map[string]interface{}{
+	 shared.Ok(w,map[string]interface{}{
 		"message": "login successfully",
 		"user":    result,
 	})

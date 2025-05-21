@@ -88,7 +88,7 @@ func GetByEmail(email string) (sqlc.User, error) {
 
 }
 
-func UpdateUser(userDto domain.UserDto) (sqlc.User, error) {
+func UpdateUser(userDto sqlc.User) (sqlc.User, error) {
 	ctx := configs.GetContext()
 	db := configs.GetInstanceDB()
 

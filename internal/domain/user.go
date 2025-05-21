@@ -31,6 +31,22 @@ func ToUserReponse(userSqlc *sqlc.User) *User{
 	}
 }
 
+
+func ToUserResponseList(userSqlcList *[]sqlc.User) *[]User{
+	users := make([]User,0,len(*userSqlcList))
+
+	for _,u := range *userSqlcList {
+		users = append(users, User{
+			ID : u.ID,
+			Name : u.Name,
+			Email: u.Email,
+			Password: "",
+		})
+	}
+
+	return &users
+}
+
 type LoginResponse struct {
     Token string `json:"token"`
 }
