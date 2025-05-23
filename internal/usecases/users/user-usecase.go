@@ -13,6 +13,13 @@ import (
 
 func CreateUserUseCase(userDto domain.UserDto )(*domain.User, error){
 
+	userAlreadyExists ,_ := repositories.GetByEmail(userDto.Email)
+	
+	if userAlreadyExists.ID != "" {
+		log.Printf("CreateUserUseCase.userAlreadyExists aready exists ")
+		return nil,fmt.Errorf("email already in use")
+	}
+
 	hash,err := bcrypt.GenerateFromPassword([]byte(userDto.Password),bcrypt.DefaultCost)
 	if err != nil {
 		log.Printf("CreateUserUseCase.GenerateFromPassword: %v", err)
@@ -91,6 +98,13 @@ func GetAllUsersUseCase()(*[]domain.User, error){
 }
 
 func UpdateUserUseCase(subEmail string,userDto domain.UserDto)(*domain.User, error){
+
+	userAlreadyExists ,_ := repositories.GetByEmail(userDto.Email)
+	
+	if userAlreadyExists.ID != "" {
+		log.Printf("CreateUserUseCase.userAlreadyExists aready exists ")
+		return nil,fmt.Errorf("email already in use")
+	}
 
 	userSqlc ,err := repositories.GetByEmail(subEmail)
 		if err != nil || userSqlc.Email != subEmail{
