@@ -3,10 +3,13 @@ package domain
 import "github.com/savinnsk/api-template-go/internal/infra/sqlc"
 
 type User struct {
-	ID       string `json:"id"`
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	ID       string 
+	Name     string 
+	Email    string 
+	Password string
+	IsActive bool
+	IsAdmin  bool
+	Phone string
 }
 
 type UserDto struct {
@@ -14,6 +17,7 @@ type UserDto struct {
 	Name     string `json:"name" validate:"required,min=2,max=100"`
 	Password string `json:"password" validate:"required,min=6"`
 	Email    string `json:"email" validate:"required,email"`
+	Phone string	`json:"phone,omitempty" validate:"min=10"`
 }
 
 
